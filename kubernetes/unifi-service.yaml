@@ -1,0 +1,44 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: unifi-rs
+  name: unifi-rs
+  namespace: home
+spec:
+  type: NodePort
+  externalIPs:
+    - 10.20.0.11
+  ports:
+  - port: 8080
+    name: uap-inform
+    targetPort: 8080
+  - port: 8443
+    name: controller-gui-api
+    targetPort: 8443
+  - port: 8880
+    name: http-redirect
+    targetPort: 8880
+  - port: 8843
+    name: https-redirect
+    targetPort: 8843
+  - port: 6789
+    name: throughput-measurement
+    targetPort: 6789
+  - port: 3478
+    name: stun-port
+    targetPort: 3478
+    protocol: UDP
+  - port: 8881
+    name: wireless-client-redirector-port1
+    targetPort: 8881
+  - port: 8882
+    name: wireless-client-redirector-port2
+    targetPort: 8882
+  - port: 10001
+    name: ap-discovery
+    targetPort: 10001
+    protocol: UDP
+  selector:
+    k8s-app: unifi-rs
+

@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: unifi-rs
+  namespace: home
+  labels:
+    k8s-app: unifi-rs
+    version: v0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: unifi-rs
+      labels:
+        k8s-app: unifi-rs
+        version: v0
+    spec:
+      containers:
+      - name: unifi-rs
+        image: centos-minion-3.chaotic-monkey.com:5000/unifi-5.4.16-v24
+        env:
+        - name: BASEDIR
+          value: /usr/lib/unifi
+        - name: DATADIR
+          value: /var/lib/unifi
+        - name: RUNDIR
+          value: /var/run/unifi
+        - name: LOGDIR
+          value: /var/log/unifi
+        - name: JVM_MAX_HEAP_SIZE
+          value: 1024M
+        - name: JVM_INIT_HEAP_SIZE
+          value: 1024M
+        - name: JAVA_HOME
+          value: /usr/lib/jvm/java-8-oracle
+        volumeMounts:
+        - name: unifi-disk-pv
+          mountPath: /var/lib/unifi
+          subPath: "ubnt/ubnt-unifi"
+        - name: unifi-mongodb-pv
+          mountPath: /usr/lib/unifi/data/db
+          subPath: "ubnt/ubnt-unifi-mongodb"
+        ports:
+        - containerPort: 6789
+          name: ubnt-6789
+          protocol: TCP
+        - containerPort: 8080
+          name: ubnt-8080
+          protocol: TCP
+        - containerPort: 8443
+          name: ubnt-8443
+          protocol: TCP
+        - containerPort: 3478
+          name: ubnt-3478
+          protocol: UDP
+        - containerPort: 8881
+          name: ubnt-8881
+          protocol: TCP
+        - containerPort: 8882
+          name: ubnt-8882
+          protocol: TCP
+        - containerPort: 10001
+          name: ubnt-10001
+          protocol: UDP
+      volumes:
+      - name: unifi-disk-pv
+        persistentVolumeClaim:
+          claimName: unifi-disk-pvc
+      - name: unifi-mongodb-pv
+        persistentVolumeClaim:
+           claimName: unifi-mongodb-pvc
