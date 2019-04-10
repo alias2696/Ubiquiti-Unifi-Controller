@@ -10,9 +10,13 @@ ENV BASEDIR=/usr/lib/unifi \
   JVM_INIT_HEAP_SIZE=1024M \
   JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
-RUN apt-get update
-RUN apt-get install -y python-software-properties apt-utils
-RUN apt-get install -y software-properties-common
+RUN apt-get update \
+  && apt-get install -y \
+    python-software-properties \
+    apt-utils \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates
 
 RUN add-apt-repository -y ppa:webupd8team/java
 RUN apt-get update
